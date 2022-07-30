@@ -1,0 +1,10 @@
+[ip]
+name    = "toolbox"
+library = "util"
+version = "0.1.0"
+vendor  = "c-rus"
+summary = "helper functions for validation and verification"
+
+# To learn more about writing the manifest, see https://c-rus.github.io/orbit/4_topic/2_orbittoml.html
+
+[dependencies]
