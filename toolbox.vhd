@@ -30,6 +30,7 @@ package toolbox is
     return std_logic;
 
     --! Returns a string representation of logic vector to output to console.
+    --! Limited to 32-bit vectors due to using `integer'image`.
     function log_logic_vector(
         slv : in std_logic_vector
     )
