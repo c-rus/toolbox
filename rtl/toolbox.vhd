@@ -29,7 +29,6 @@ package toolbox is
     return std_logic;
 
     --! Returns a string representation of logic vector to output to console.
-    --! Limited to 32-bit vectors due to using `integer'image`.
     function log_logic_vector(
         slv : in std_logic_vector
     )
@@ -43,6 +42,8 @@ package toolbox is
 
     --! Consumes a single line in file `f` to cast from numerical value to a 
     --! logic vector of size `len` consisting of logical '1' and '0's.
+    --!
+    --! Note: Integers cannot be read as 'negative' with a leading '-' sign.
     impure function read_int_to_logic_vector(
         file f : text;
         len : in positive
@@ -76,9 +77,44 @@ package toolbox is
         c : character
     )
     return std_logic;
+
+    --! Reports a mismatch between logic vectors.
+    function error_slv(
+        received : in std_logic_vector;
+        expected : in std_logic_vector
+    )
+    return string;
+
+    --! Reports a mismatch between logic bits.
+    function error_sl(
+        received : in std_logic;
+        expected : in std_logic
+    )
+    return string;
+
 end package;
 
 package body toolbox is
+
+    function error_slv(
+        received : in std_logic_vector;
+        expected : in std_logic_vector
+    )
+    return string is
+    begin
+        return "ERROR: expected " & log_logic_vector(expected) & " - received " & log_logic_vector(received);
+    end function;
+
+
+    function error_sl(
+        received : in std_logic;
+        expected : in std_logic
+    )
+    return string is
+    begin
+        return "ERROR: expected " & log_logic(expected) & " - received " & log_logic(received);
+    end function;
+
 
     function to_std_logic(
         i : in integer
@@ -97,8 +133,19 @@ package body toolbox is
         slv : in std_logic_vector
     )
     return string is
+        variable str : string(1 to slv'length);
     begin
-        return integer'image(to_integer(signed(slv)));
+        for ii in 1 to slv'length loop
+            if slv(ii-1) = '1' then
+                str(ii) := '1';
+            elsif slv(ii-1) = '0' then
+                str(ii) := '0';
+            else
+                str(ii) := '?';
+            end if;
+        end loop;
+
+        return """" & str & """";
     end function;
 
 
@@ -119,8 +166,8 @@ package body toolbox is
         variable text_line : line;
         variable text_int  : integer;
     begin
-        readline(f,text_line);
-        read(text_line,text_int);
+        readline(f, text_line);
+        read(text_line, text_int);
         return std_logic_vector(to_unsigned(text_int, len));
     end function;
 
@@ -132,8 +179,8 @@ package body toolbox is
         variable text_line : line;
         variable text_int  : integer;
     begin
-        readline(f,text_line);
-        read(text_line,text_int);
+        readline(f, text_line);
+        read(text_line, text_int);
         return to_std_logic(text_int);
     end function;
 
@@ -160,8 +207,8 @@ package body toolbox is
         variable text_str  : string(len downto 1);
         variable slv       : std_logic_vector(len-1 downto 0);
     begin
-        readline(f,text_line);
-        read(text_line,text_str);
+        readline(f, text_line);
+        read(text_line, text_str);
 
         for ii in len-1 downto 0 loop
             slv(ii) := char_to_logic(text_str(ii+1));
@@ -178,8 +225,8 @@ package body toolbox is
         variable text_line : line;
         variable text_str  : string(1 downto 1);
     begin
-        readline(f,text_line);
-        read(text_line,text_str);
+        readline(f, text_line);
+        read(text_line, text_str);
         return char_to_logic(text_str(1));
     end function;
 
