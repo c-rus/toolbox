@@ -15,7 +15,6 @@
 --!      read_str_to_logic(text) -> std_logic
 --!      char_to_logic(character) -> std_logic
 --------------------------------------------------------------------------------
-
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -26,7 +25,7 @@ package toolbox is
     --! a logical '1'.
     function to_std_logic(
         i : in integer
-        )
+    )
     return std_logic;
 
     --! Returns a string representation of logic vector to output to console.
