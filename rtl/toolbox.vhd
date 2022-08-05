@@ -80,6 +80,7 @@ package toolbox is
 
     --! Reports a mismatch between logic vectors.
     function error_slv(
+        identifier : in string;
         received : in std_logic_vector;
         expected : in std_logic_vector
     )
@@ -87,6 +88,7 @@ package toolbox is
 
     --! Reports a mismatch between logic bits.
     function error_sl(
+        identifier : in string;
         received : in std_logic;
         expected : in std_logic
     )
@@ -97,22 +99,24 @@ end package;
 package body toolbox is
 
     function error_slv(
+        identifier : in string;
         received : in std_logic_vector;
         expected : in std_logic_vector
     )
     return string is
     begin
-        return "ERROR: expected " & log_logic_vector(expected) & " - received " & log_logic_vector(received);
+        return "ERROR: [" & identifier & "] expected " & log_logic_vector(expected) & " - received " & log_logic_vector(received);
     end function;
 
 
     function error_sl(
+        identifier : in string;
         received : in std_logic;
         expected : in std_logic
     )
     return string is
     begin
-        return "ERROR: expected " & log_logic(expected) & " - received " & log_logic(received);
+        return "ERROR: [" & identifier & "] expected " & log_logic(expected) & " - received " & log_logic(received);
     end function;
 
 
@@ -134,11 +138,13 @@ package body toolbox is
     )
     return string is
         variable str : string(1 to slv'length);
+        variable sl_bit : std_logic;
     begin
         for ii in 1 to slv'length loop
-            if slv(ii-1) = '1' then
+            sl_bit := slv(slv'length-ii);
+            if sl_bit = '1' then
                 str(ii) := '1';
-            elsif slv(ii-1) = '0' then
+            elsif sl_bit = '0' then
                 str(ii) := '0';
             else
                 str(ii) := '?';
