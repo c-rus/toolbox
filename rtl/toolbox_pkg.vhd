@@ -1,26 +1,26 @@
 --------------------------------------------------------------------------------
---! Project: c-rus.util.toolbox
---! Author: Chase Ruskin
---! Course: Digital Design - EEL4712C
---! Created: October 17, 2021
---! Package: toolbox
---! Description:
---!  Helper functions for file I/O, reporting, and casting. Functions include:
---!      to_std_logic(integer) -> std_logic
---!      log_logic_vector(std_logic_vector) -> string
---!      log_logic(std_logic) -> string
---!      read_int_to_logic_vector(text, positive) -> std_logic_vector
---!      read_int_to_logic(text) -> std_logic
---!      read_str_to_logic_vector(text, positive) -> std_logic_vector
---!      read_str_to_logic(text) -> std_logic
---!      char_to_logic(character) -> std_logic
+--! Project  : crus.util.toolbox
+--! Engineer : Chase Ruskin
+--! Course   : Digital Design - EEL4712C
+--! Created  : October 17, 2021
+--! Package  : toolbox_pkg
+--! Details  :
+--!     Helper functions for file I/O, reporting, and casting. Functions include:
+--!         to_std_logic(integer) -> std_logic
+--!         log_logic_vector(std_logic_vector) -> string
+--!         log_logic(std_logic) -> string
+--!         read_int_to_logic_vector(text, positive) -> std_logic_vector
+--!         read_int_to_logic(text) -> std_logic
+--!         read_str_to_logic_vector(text, positive) -> std_logic_vector
+--!         read_str_to_logic(text) -> std_logic
+--!         char_to_logic(character) -> std_logic
 --------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use std.textio.all;
 
-package toolbox is
+package toolbox_pkg is
     --! Casts an integer to single logic bit. Any value other than 0 maps to
     --! a logical '1'.
     function to_std_logic(
@@ -94,9 +94,9 @@ package toolbox is
     )
     return string;
 
-end package;
+end package toolbox_pkg;
 
-package body toolbox is
+package body toolbox_pkg is
 
     function error_slv(
         identifier : in string;
@@ -236,4 +236,4 @@ package body toolbox is
         return char_to_logic(text_str(1));
     end function;
 
-end toolbox;
+end toolbox_pkg;

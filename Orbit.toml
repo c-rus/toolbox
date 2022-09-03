@@ -2,7 +2,7 @@
 name    = "toolbox"
 library = "util"
 version = "0.1.0"
-vendor  = "c-rus"
+vendor  = "crus"
 summary = "helper functions for validation and verification"
 repository = "https://github.com/c-rus/toolbox.git"
 

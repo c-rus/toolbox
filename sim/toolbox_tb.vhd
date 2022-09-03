@@ -1,3 +1,13 @@
+--------------------------------------------------------------------------------
+--! Project   : crus.util.toolbox
+--! Engineer  : Chase Ruskin
+--! Course    : Digital Design - EEL4712C
+--! Created   : October 17, 2021
+--! Testbench : toolbox_tb
+--! Details   :
+--!     Tests the toolbox_pkg package by using a test entity and utilizing the
+--!     function calls on an sample input test vector file 'numbers.dat'.
+--------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
 
@@ -18,11 +28,13 @@ library ieee;
 use ieee.std_logic_1164.all;
 use std.textio.all;
 use ieee.numeric_std.all;
+use work.toolbox_pkg;
 
 entity toolbox_tb is
 end entity;
 
 architecture sim of toolbox_tb is
+
     constant WIDTH_A : positive := 12;
 
     --! internal test signals
@@ -32,8 +44,8 @@ architecture sim of toolbox_tb is
 
     signal sl0 : std_logic;
 
-
     signal w_data : std_logic;
+
 begin
     -- unit-under-test
     uut: entity work.toolbox_test 
@@ -43,34 +55,34 @@ begin
 
     --! test reading a file filled with test vectors
     io: process
-        file numbers: text open read_mode is "../sim/numbers.dat";
+        file numbers: text open read_mode is "../../sim/numbers.dat";
     begin
         -- read 1s and 0s into logic vectors
-        slv0 <= work.toolbox.read_str_to_logic_vector(numbers, WIDTH_A);
-        slv1 <= work.toolbox.read_str_to_logic_vector(numbers, WIDTH_A);
+        slv0 <= toolbox_pkg.read_str_to_logic_vector(numbers, WIDTH_A);
+        slv1 <= toolbox_pkg.read_str_to_logic_vector(numbers, WIDTH_A);
         wait for 10 ns;
-        report "slv0: " & work.toolbox.log_logic_vector(slv0);
-        report "slv1: " & work.toolbox.log_logic_vector(slv1);
+        report "slv0: " & toolbox_pkg.log_logic_vector(slv0);
+        report "slv1: " & toolbox_pkg.log_logic_vector(slv1);
 
-        assert slv0 = slv1 report work.toolbox.error_slv("slv0", slv0, slv1) severity note;
+        assert slv0 = slv1 report toolbox_pkg.error_slv("slv0", slv0, slv1) severity note;
 
         -- read integers into logic vectors
-        slv0 <= work.toolbox.read_int_to_logic_vector(numbers, WIDTH_A);
-        slv2 <= work.toolbox.read_int_to_logic_vector(numbers, 8);
+        slv0 <= toolbox_pkg.read_int_to_logic_vector(numbers, WIDTH_A);
+        slv2 <= toolbox_pkg.read_int_to_logic_vector(numbers, 8);
         wait for 10 ns;
-        report "slv0: " & work.toolbox.log_logic_vector(slv0);
-        report "slv2: " & work.toolbox.log_logic_vector(slv1);
+        report "slv0: " & toolbox_pkg.log_logic_vector(slv0);
+        report "slv2: " & toolbox_pkg.log_logic_vector(slv1);
 
         -- read characters into logic bits
-        sl0 <= work.toolbox.read_str_to_logic(numbers);
+        sl0 <= toolbox_pkg.read_str_to_logic(numbers);
         wait for 10 ns;
-        report "sl0: " & work.toolbox.log_logic(sl0);
+        report "sl0: " & toolbox_pkg.log_logic(sl0);
 
-        sl0 <= work.toolbox.read_str_to_logic(numbers);
+        sl0 <= toolbox_pkg.read_str_to_logic(numbers);
         wait for 10 ns;
-        report "sl0: " & work.toolbox.log_logic(sl0);
+        report "sl0: " & toolbox_pkg.log_logic(sl0);
 
-        assert w_data /= sl0 report work.toolbox.error_sl("data", w_data, sl0) severity note;
+        assert w_data /= sl0 report toolbox_pkg.error_sl("data", w_data, sl0) severity note;
         wait;
     end process;
 
