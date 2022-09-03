@@ -2,6 +2,6 @@
 # Do not manually edit this file.
 
 [[ip]]
-name = "c-rus.util.toolbox"
+name = "crus.util.toolbox"
 version = "0.1.0"
 source = "https://github.com/c-rus/toolbox.git"
