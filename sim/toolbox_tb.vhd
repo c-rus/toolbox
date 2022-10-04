@@ -28,7 +28,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use std.textio.all;
 use ieee.numeric_std.all;
-use work.toolbox_pkg;
+use work.toolbox_pkg.all;
 
 entity toolbox_tb is
 end entity;
@@ -58,31 +58,33 @@ begin
         file numbers: text open read_mode is "../../sim/numbers.dat";
     begin
         -- read 1s and 0s into logic vectors
-        slv0 <= toolbox_pkg.read_str_to_logic_vector(numbers, WIDTH_A);
-        slv1 <= toolbox_pkg.read_str_to_logic_vector(numbers, WIDTH_A);
+        slv0 <= read_str_to_slv(numbers, WIDTH_A);
+        slv1 <= read_str_to_slv(numbers, WIDTH_A);
         wait for 10 ns;
-        report "slv0: " & toolbox_pkg.log_logic_vector(slv0);
-        report "slv1: " & toolbox_pkg.log_logic_vector(slv1);
+        report "slv0: " & log_slv(slv0);
+        report "slv1: " & log_slv(slv1);
 
-        assert slv0 = slv1 report toolbox_pkg.error_slv("slv0", slv0, slv1) severity note;
+        assert slv0 = slv1 report error_slv("slv0", slv0, slv1) severity note;
 
         -- read integers into logic vectors
-        slv0 <= toolbox_pkg.read_int_to_logic_vector(numbers, WIDTH_A);
-        slv2 <= toolbox_pkg.read_int_to_logic_vector(numbers, 8);
+        slv0 <= read_int_to_slv(numbers, WIDTH_A);
+        slv2 <= read_int_to_slv(numbers, 8);
         wait for 10 ns;
-        report "slv0: " & toolbox_pkg.log_logic_vector(slv0);
-        report "slv2: " & toolbox_pkg.log_logic_vector(slv1);
+        report "slv0: " & log_slv(slv0);
+        report "slv2: " & log_slv(slv1);
 
         -- read characters into logic bits
-        sl0 <= toolbox_pkg.read_str_to_logic(numbers);
+        sl0 <= read_str_to_sl(numbers);
         wait for 10 ns;
-        report "sl0: " & toolbox_pkg.log_logic(sl0);
+        report "sl0: " & log_sl(sl0);
 
-        sl0 <= toolbox_pkg.read_str_to_logic(numbers);
+        sl0 <= read_str_to_sl(numbers);
         wait for 10 ns;
-        report "sl0: " & toolbox_pkg.log_logic(sl0);
+        report "sl0: " & log_sl(sl0);
 
-        assert w_data /= sl0 report toolbox_pkg.error_sl("data", w_data, sl0) severity note;
+        assert w_data /= sl0 report error_sl("data", w_data, sl0) severity note;
+        -- halt the simulation
+        report "Simulation complete.";
         wait;
     end process;
 
