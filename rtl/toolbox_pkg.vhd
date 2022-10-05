@@ -5,15 +5,17 @@
 --! Created  : October 17, 2021
 --! Package  : toolbox_pkg
 --! Details  :
---!     Helper functions for file I/O, reporting, and casting:
---!         to_sl(integer) -> std_logic
---!         log_slv(std_logic_vector) -> string
---!         log_sl(std_logic) -> string
---!         read_int_to_slv(text, positive) -> std_logic_vector
---!         read_int_to_sl(text) -> std_logic
---!         read_str_to_slv(text, positive) -> std_logic_vector
---!         read_str_to_sl(text) -> std_logic
---!         char_to_sl(character) -> std_logic
+--!     Helper functions for file I/O, reporting, and casting.
+--!
+--!     NAME            PARAMETERS         RETURN VALUE
+--!     to_sl           (integer)          -> std_logic
+--!     log_slv         (std_logic_vector) -> string
+--!     log_sl          (std_logic)        -> string
+--!     read_int_to_slv (text, positive)   -> std_logic_vector
+--!     read_int_to_sl  (text)             -> std_logic
+--!     read_str_to_slv (text, positive)   -> std_logic_vector
+--!     read_str_to_sl  (text)             -> std_logic
+--!     char_to_sl      (character)        -> std_logic
 --------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
@@ -23,107 +25,59 @@ use std.textio.all;
 package toolbox_pkg is
     --! Casts an integer to single logic bit. Any value other than 0 maps to
     --! a logical '1'.
-    function to_sl(
-        i : in integer
-    )
-    return std_logic;
+    function to_sl(i: integer) return std_logic;
 
     --! Returns a string representation of logic vector to output to console.
-    function log_slv(
-        slv : in std_logic_vector
-    )
-    return string;
+    function log_slv(slv: std_logic_vector) return string;
 
     --! Returns a string representation of logic bit to output to console.
-    function log_sl(
-        sl : in std_logic
-    )
-    return string;
+    function log_sl(sl: std_logic) return string;
 
     --! Consumes a single line in file `f` to cast from numerical value to a 
     --! logic vector of size `len` consisting of logical '1' and '0's.
     --!
     --! Note: Integers cannot be read as 'negative' with a leading '-' sign.
-    impure function read_int_to_slv(
-        file f : text;
-        len : in positive
-    )
-    return std_logic_vector;
+    impure function read_int_to_slv(file f: text; len: positive) return std_logic_vector;
 
     --! Consumes a single line in file `f` to cast from numerical value to logical
     --! '1' or '0'.
-    impure function read_int_to_sl(
-        file f : text
-    )
-    return std_logic;
+    impure function read_int_to_sl(file f: text) return std_logic;
 
     --! Consumes a single line in file `f` to be a logic vector of size `len`
     --! consisting of logical '1' and '0's.
-    impure function read_str_to_slv(
-        file f : text;
-        len : positive
-    )
-    return std_logic_vector;
+    impure function read_str_to_slv(file f: text; len: positive) return std_logic_vector;
 
     --! Consumes a single line in file `f` to be a logical '1' or '0'.
-    impure function read_str_to_sl(
-        file f : text
-    )
-    return std_logic;
+    impure function read_str_to_sl(file f: text) return std_logic;
 
     --! Casts a character `c` to a logical '1' or '0'. Anything not the character
     --! '1' maps to a logical '0'.
-    function char_to_sl(
-        c : character
-    )
-    return std_logic;
+    function char_to_sl(c: character) return std_logic;
 
     --! Reports a mismatch between logic vectors.
-    function error_slv(
-        identifier : in string;
-        received : in std_logic_vector;
-        expected : in std_logic_vector
-    )
-    return string;
+    function error_slv(id: string; rec: std_logic_vector; expect: std_logic_vector) return string;
 
     --! Reports a mismatch between logic bits.
-    function error_sl(
-        identifier : in string;
-        received : in std_logic;
-        expected : in std_logic
-    )
-    return string;
+    function error_sl(id: string; rec: std_logic; expect: std_logic) return string;
 
 end package toolbox_pkg;
 
+
 package body toolbox_pkg is
 
-    function error_slv(
-        identifier : in string;
-        received : in std_logic_vector;
-        expected : in std_logic_vector
-    )
-    return string is
+    function error_slv(id: string; rec: std_logic_vector; expect: std_logic_vector) return string is
     begin
-        return "ERROR: [" & identifier & "] expected " & log_slv(expected) & " - received " & log_slv(received);
+        return "ERROR: [" & id & "] expected " & log_slv(expect) & " - received " & log_slv(rec);
     end function;
 
 
-    function error_sl(
-        identifier : in string;
-        received : in std_logic;
-        expected : in std_logic
-    )
-    return string is
+    function error_sl(id: string; rec: std_logic; expect: std_logic) return string is
     begin
-        return "ERROR: [" & identifier & "] expected " & log_sl(expected) & " - received " & log_sl(received);
+        return "ERROR: [" & id & "] expected " & log_sl(expect) & " - received " & log_sl(rec);
     end function;
 
 
-    function to_sl(
-        i : in integer
-    )
-    return std_logic is
+    function to_sl(i: integer) return std_logic is
     begin
         if(i = 0) then
             return '0';
@@ -133,10 +87,7 @@ package body toolbox_pkg is
     end function;
 
 
-    function log_slv(
-        slv : in std_logic_vector
-    )
-    return string is
+    function log_slv(slv: std_logic_vector) return string is
         variable str : string(1 to slv'length);
         variable sl_bit : std_logic;
     begin
@@ -155,20 +106,13 @@ package body toolbox_pkg is
     end function;
 
 
-    function log_sl(
-        sl : in std_logic
-    )
-    return string is
+    function log_sl(sl: std_logic) return string is
     begin
         return std_logic'image(sl);
     end function;
 
 
-    impure function read_int_to_slv(
-        file f : text;
-        len : in positive
-    )
-    return std_logic_vector is
+    impure function read_int_to_slv(file f: text; len: positive) return std_logic_vector is
         variable text_line : line;
         variable text_int  : integer;
     begin
@@ -178,10 +122,7 @@ package body toolbox_pkg is
     end function;
 
 
-    impure function read_int_to_sl(
-        file f : text
-    )
-    return std_logic is
+    impure function read_int_to_sl(file f: text) return std_logic is
         variable text_line : line;
         variable text_int  : integer;
     begin
@@ -191,10 +132,7 @@ package body toolbox_pkg is
     end function;
 
 
-    function char_to_sl(
-        c : character
-    )
-    return std_logic is
+    function char_to_sl(c: character) return std_logic is
     begin
         if(c = '1') then
             return '1';
@@ -204,11 +142,7 @@ package body toolbox_pkg is
     end function;
 
 
-    impure function read_str_to_slv(
-        file f : text;
-        len : positive
-    )
-    return std_logic_vector is
+    impure function read_str_to_slv(file f: text; len: positive) return std_logic_vector is
         variable text_line : line;
         variable text_str  : string(len downto 1);
         variable slv       : std_logic_vector(len-1 downto 0);
@@ -224,10 +158,7 @@ package body toolbox_pkg is
     end function;
 
 
-    impure function read_str_to_sl(
-        file f : text
-    )
-    return std_logic is
+    impure function read_str_to_sl(file f: text) return std_logic is
         variable text_line : line;
         variable text_str  : string(1 downto 1);
     begin
