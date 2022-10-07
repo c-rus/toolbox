@@ -63,7 +63,8 @@ begin
         wait for 10 ns;
         report "slv0: " & log_slv(slv0);
         report "slv1: " & log_slv(slv1);
-
+        assert_eq_slv(warning, slv0, slv1, "data");
+        
         assert slv0 = slv1 report error_slv("slv0", slv0, slv1) severity note;
 
         -- read integers into logic vectors
@@ -72,6 +73,7 @@ begin
         wait for 10 ns;
         report "slv0: " & log_slv(slv0);
         report "slv2: " & log_slv(slv1);
+
 
         -- read characters into logic bits
         sl0 <= read_str_to_sl(numbers);
@@ -85,6 +87,7 @@ begin
         assert w_data /= sl0 report error_sl("data", w_data, sl0) severity note;
         -- halt the simulation
         report "Simulation complete.";
+
         wait;
     end process;
 

@@ -16,6 +16,7 @@
 --!     read_str_to_slv (text, positive)   -> std_logic_vector
 --!     read_str_to_sl  (text)             -> std_logic
 --!     char_to_sl      (character)        -> std_logic
+--!     assert_eq_slv   (severity_level, std_logic_vector, std_logic_vector, string)
 --------------------------------------------------------------------------------
 library ieee;
 use ieee.std_logic_1164.all;
@@ -60,20 +61,29 @@ package toolbox_pkg is
     --! Reports a mismatch between logic bits.
     function error_sl(id: string; rec: std_logic; expect: std_logic) return string;
 
+    --! Asserts `rec` == `expect` and logs error message if the assertion is false.
+    procedure assert_eq_slv(lvl: severity_level; rec: std_logic_vector; expect: std_logic_vector; message: string);
+
 end package toolbox_pkg;
 
 
 package body toolbox_pkg is
 
+    procedure assert_eq_slv(lvl: severity_level; rec: std_logic_vector; expect: std_logic_vector; message: string) is
+    begin
+        assert rec = expect report error_slv(message, rec, expect) severity lvl;
+    end procedure;
+
+
     function error_slv(id: string; rec: std_logic_vector; expect: std_logic_vector) return string is
     begin
-        return "ERROR: [" & id & "] expected " & log_slv(expect) & " - received " & log_slv(rec);
+        return "ERROR: [" & id & "] received " & log_slv(rec) & " - expected " & log_slv(expect);
     end function;
 
 
     function error_sl(id: string; rec: std_logic; expect: std_logic) return string is
     begin
-        return "ERROR: [" & id & "] expected " & log_sl(expect) & " - received " & log_sl(rec);
+        return "ERROR: [" & id & "] received " & log_sl(rec) & " - expected " & log_sl(expect);
     end function;
 
 
